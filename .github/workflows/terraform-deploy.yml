@@ -2,6 +2,13 @@ name: Terraform Deploy
 
 on:
   workflow_dispatch: # Permite ejecutar manualmente el workflow desde GitHub
+    inputs:
+      aws_access_key_id:
+        description: "AWS Access Key ID"
+        required: true
+      aws_secret_access_key:
+        description: "AWS Secret Access Key"
+        required: true
 
 jobs:
   deploy:
@@ -12,12 +19,24 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Configure AWS credentials
-        id: aws-credentials
+      # Instalar Terraform
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.10.4 # Cambia según la versión que necesites
+
+      - name: Package Lambda
         run: |
-          echo "AWS_ACCESS_KEY_ID=$(read -p 'AWS Access Key ID: ' key && echo $key)" >> $GITHUB_ENV
-          echo "AWS_SECRET_ACCESS_KEY=$(read -sp 'AWS Secret Access Key: ' secret && echo $secret)" >> $GITHUB_ENV
-          echo "AWS_REGION=$(read -p 'AWS Region: ' region && echo $region)" >> $GITHUB_ENV
+          mkdir -p build
+          zip -j build/lambda.zip lambda/index.js
+
+      # Configurar credenciales de AWS usando los inputs proporcionados
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ inputs.aws_access_key_id }}
+          aws-secret-access-key: ${{ inputs.aws_secret_access_key }}
+          aws-region: eu-central-1
 
       - name: Validate Terraform Installation
         run: terraform version
