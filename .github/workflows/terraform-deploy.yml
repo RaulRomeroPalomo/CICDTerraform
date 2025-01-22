@@ -1,0 +1,32 @@
+name: Terraform Deploy
+
+on:
+  workflow_dispatch: # Permite ejecutar manualmente el workflow desde GitHub
+
+jobs:
+  deploy:
+    name: Terraform Plan and Apply
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        id: aws-credentials
+        run: |
+          echo "AWS_ACCESS_KEY_ID=$(read -p 'AWS Access Key ID: ' key && echo $key)" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=$(read -sp 'AWS Secret Access Key: ' secret && echo $secret)" >> $GITHUB_ENV
+          echo "AWS_REGION=$(read -p 'AWS Region: ' region && echo $region)" >> $GITHUB_ENV
+
+      - name: Validate Terraform Installation
+        run: terraform version
+
+      - name: Initialize Terraform
+        run: terraform init
+
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
