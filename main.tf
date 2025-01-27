@@ -1,7 +1,7 @@
 provider "aws" {
   region = "eu-central-1"
 }
-
+/**
 resource "aws_iam_role" "lambda_exec_role" {
   name = "lambda_execution_role"
   assume_role_policy = jsonencode({
@@ -31,4 +31,4 @@ resource "aws_lambda_function" "my_lambda" {
 
   filename      = "build/lambda.zip" # Debes subir un archivo .zip con tu código
   source_code_hash = filebase64sha256("build/lambda.zip")
-}
+}*/
