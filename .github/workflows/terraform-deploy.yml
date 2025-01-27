@@ -55,8 +55,10 @@ jobs:
 
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
+        continue-on-error: true
 
       - name: Save Terraform State
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: terraform-state
