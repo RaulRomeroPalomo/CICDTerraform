@@ -22,7 +22,7 @@ resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
   role       = aws_iam_role.lambda_exec_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
-
+/**
 resource "aws_lambda_function" "my_lambda" {
   function_name = "my_lambda_function"
   role          = aws_iam_role.lambda_exec_role.arn
@@ -31,4 +31,4 @@ resource "aws_lambda_function" "my_lambda" {
 
   filename      = "build/lambda.zip" # Debes subir un archivo .zip con tu código
   source_code_hash = filebase64sha256("build/lambda.zip")
-}
+}*/
