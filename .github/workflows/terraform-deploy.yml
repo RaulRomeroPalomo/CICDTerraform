@@ -44,10 +44,11 @@ jobs:
       - name: Initialize Terraform
         run: terraform init
 
-      - name: Download Terraform State
-        uses: actions/download-artifact@v4
+      - name: Download Terraform state
+        uses: devgioele/terraform-state-artifact@v4
         with:
-          name: terraform-state
+          passphrase: admin
+          download_upload: download
         continue-on-error: true
 
       - name: Terraform Plan
@@ -57,9 +58,8 @@ jobs:
         run: terraform apply -auto-approve tfplan
         continue-on-error: true
 
-      - name: Save Terraform State
-        if: always()
-        uses: actions/upload-artifact@v4
+      - name: Upload Terraform state
+        uses: devgioele/terraform-state-artifact@v4
         with:
-          name: terraform-state
-          path: terraform.tfstate
+          passphrase: admin
+          download_upload: upload
