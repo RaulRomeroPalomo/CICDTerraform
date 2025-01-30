@@ -24,7 +24,7 @@ resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
 }
 
 resource "aws_lambda_function" "my_lambda" {
-  function_name = "my_lambda_function"
+  function_name = "my_lambda_functionv2"
   role          = aws_iam_role.lambda_exec_role.arn
   handler       = "index.handler"
   runtime       = "nodejs18.x"
